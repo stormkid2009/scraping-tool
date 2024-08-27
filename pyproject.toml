@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "hisham"
+version = "0.1.0"
+description = ""
+authors = ["Anwar Ahmed <nileking2007@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.32.3"
+beautifulsoup4 = "^4.12.3"
+lxml = "^5.3.0"
+pandas = "^2.2.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
