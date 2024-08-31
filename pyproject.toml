@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "hisham"
+name = "scraping-tool"
 version = "0.1.0"
-description = ""
+description = "tool to scraping web content with reusable functionality"
 authors = ["Anwar Ahmed <nileking2007@gmail.com>"]
 readme = "README.md"
 
@@ -19,3 +19,8 @@ pytest = "^8.3.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+
+
