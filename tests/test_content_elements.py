@@ -1,57 +1,27 @@
-# tests/test_content_elements.py
-
-import unittest
+import pytest
 from unittest.mock import patch
 from src.content_elements import get_content_elements_from_user
 
-class TestGetContentElementsFromUser(unittest.TestCase):
-    
-    @patch('builtins.input', side_effect=[
-        'h1', 'header',  # First element: valid tag and class name
-        'y',  # Continue adding elements
-        'p', 'paragraph',  # Second element: valid tag and class name
-        'n'  # Stop adding elements
-    ])
-    def test_get_content_elements_from_user(self, mock_input):
-        expected_output = [
-            {"tag": "h1", "class": "header"},
-            {"tag": "p", "class": "paragraph"},
-        ]
-        result = get_content_elements_from_user()
-        self.assertEqual(result, expected_output)
-
-
-    @patch('builtins.input', side_effect=[
-        'h1', 'header',  # First element: valid tag and class name
-        'y',  # Continue adding elements
-        'p',          # First tag
-        '',           # Empty class name (re-prompt needed)
-        'paragraph',  # Valid class name
-        'n'           # No more elements
-    ])
-    def test_empty_class_name(self, mock_input):
-        expected_output = [
-            {"tag": "h1", "class": "header"},
-            {"tag": "p", "class": "paragraph"},
-        ]
-        result = get_content_elements_from_user()
-        self.assertEqual(result, expected_output)
-
-        
-    @patch('builtins.input', side_effect=[
-        '', 'h1', 'header',  # First element: empty tag, then valid tag and class name
-        'n'  # Stop adding elements
-    ])
-    def test_empty_tag(self, mock_input):
-        expected_output = [
-            {"tag": "h1", "class": "header"},
-        ]
-        result = get_content_elements_from_user()
-        self.assertEqual(result, expected_output)
-
-    
-
-
-
-if __name__ == '__main__':
-    unittest.main()
+@pytest.mark.parametrize("side_effect, expected_output", [
+    (['h1', 'header', '', 'y', 'p', '', 'para-id', 'n'], [
+        {"tag": "h1", "class": "header"},
+        {"tag": "p", "id": "para-id"},
+    ]),
+    (['h1', '', '', 'h1', 'header', '', 'n'], [
+        {"tag": "h1", "class": "header"},
+    ]),
+    (['', 'h1', 'header', 'header-id', 'n'], [
+        {"tag": "h1", "class": "header", "id": "header-id"},
+    ]),
+    (['div', '', 'div-id', 'n'], [
+        {"tag": "div", "id": "div-id"},
+    ]),
+    (['span', 'highlight', 'highlight-id', 'n'], [
+        {"tag": "span", "class": "highlight", "id": "highlight-id"},
+    ]),
+])
+@patch('builtins.input')
+def test_get_content_elements_from_user(mock_input, side_effect, expected_output):
+    mock_input.side_effect = side_effect
+    result = get_content_elements_from_user()
+    assert result == expected_output
